@@ -20,7 +20,5 @@ with open('need_hashes.csv') as f:
     res = ''
     for line in f:
         hline = line.split(';')
-        hashed_line = '{}; {}; {}; {}'.format(
-            hline[0], hline[1], hesh_sum(hline[0], hline[1]), '\n')
-        res += hashed_line
+        res += hesh_sum(hline[0], hline[1]) + '\n'
     f.write(res)
