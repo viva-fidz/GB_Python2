@@ -8,7 +8,8 @@ class TCPHandler(socketserver.BaseRequestHandler):
     def handle(self):
         self.data = self.request.recv(1024)
         transaction_rsvd = struct.unpack('2s6s6s4s4s6s', self.data)
-        Transaction = namedtuple('Transaction', ('tr_header', 'tr_date', 'tr_time', 'tr_type', 'tr_data', 'tr_transaction_id'))
+        Transaction = namedtuple('Transaction', ('tr_header', 'tr_date', 'tr_time', 'tr_type',
+                                                 'tr_data', 'tr_transaction_id'))
         data = Transaction(*transaction_rsvd)
 
         tr_header = data.tr_header.decode()
