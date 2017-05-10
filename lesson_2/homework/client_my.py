@@ -6,16 +6,14 @@ import datetime
 
 now = datetime.datetime.now()
 
-
 def id_gen(int_from=1111, int_to=9999):
     """Генерирует случайное число в заданом диапазоне 
-     transaction_id
+       transaction_id
     """
     m = [i for i in range(int_from, int_to)]
     random.shuffle(m)
     for id in m:
         yield id
-
 
 for id in id_gen():
     try:
@@ -33,7 +31,6 @@ tr_data = random.choice(data).encode('utf-8')
 transaction_id = hex(transaction_id).encode('utf-8')
 print(tr_time)
 transaction = struct.pack('2s6s6s4s4s6s', tr_header, tr_date, tr_time, tr_type, tr_data, transaction_id)
-
 
 HOST, PORT = 'localhost', 9999
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
