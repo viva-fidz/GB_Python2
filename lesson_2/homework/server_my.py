@@ -53,8 +53,8 @@ class TCPHandler(socketserver.BaseRequestHandler):
             tr_header, tr_decoded_date, tr_decoded_time, tr_transaction_id, tr_type, tr_data)
         print("От клиента {} получено: \n{}".format(self.client_address[0], msg))
 
-
-        Fill_db.terminal(tr_transaction_id, tr_type, 'conf')
+        
+        Fill_db.terminal(tr_transaction_id, tr_type, "'terminal_id':'1'")
 
 HOST, PORT = 'localhost', 9999
 server = socketserver.TCPServer((HOST, PORT), TCPHandler)
