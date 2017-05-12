@@ -4,28 +4,34 @@ with sqlite3.connect('company.db3') as conn:
     # Создаем курсор - это специальный объект который делает запросы и получает их результаты
     cursor = conn.cursor()
 
+    cursor.execute("""DROP table if exists terminal""")
+    cursor.execute("""DROP table if exists partner""")
+    cursor.execute("""DROP table if exists payment""")
+
     cursor.execute("""
                      CREATE TABLE if not exists Terminal (
-                            id  INTEGER primary key, 
+                            id  INTEGER PRIMARY KEY,
                             title TEXT, 
                             configuration TEXT,
                             comment TEXT,
                             pub_key TEXT   
                             );
                      """)
+
     cursor.execute("""               
                      CREATE TABLE if not exists Payment (
-                            id  INTEGER primary key, 
-                            datetime DATETIME, 
-                            terminal_id  INTEGER,
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            datetime TEXT, 
+                            terminal_id  INTEGER, 
                             transaction_id  INTEGER,
                             partner_id  INTEGER,
                             summ INTEGER
                             );
                      """)
+
     cursor.execute("""
                      CREATE TABLE if not exists Partner (
-                            id  INTEGER primary key, 
+                            id INTEGER PRIMARY KEY AUTOINCREMENT, 
                             title TEXT, 
                             comment TEXT  
                             );
@@ -41,26 +47,29 @@ class Fill_db:
                 insert into Terminal (id, title, configuration)
                 VALUES (?, ?, ?);""",
                            (transaction_id, title, configuration))
-            print('db ok')
+            print('trans ok')
 
-    def payment(id, datetime, terminal_id, transaction_id, partner_id, summ):
+
+    def payment(datetime, terminal_id, transaction_id, partner_id, summ):
         with sqlite3.connect('company.db3') as conn:
             cursor = conn.cursor()
             cursor.execute("""
                 insert into Payment (
-                id, datetime, terminal_id, transaction_id, partner_id, summ)
-                VALUES (?, ?, ?, ?, ?, ?);""",
-                           (id, datetime, terminal_id, transaction_id, partner_id, summ))
+                datetime, terminal_id, transaction_id, partner_id, summ)
+                VALUES (?, ?, ?, ?, ?);""",
+                           (datetime, terminal_id, transaction_id, partner_id, summ))
+            print('payment ok')
 
-    def partner(id, title, comment):
+
+    def partner(title, comment):
         with sqlite3.connect('company.db3') as conn:
             cursor = conn.cursor()
             cursor.execute("""
-                insert into Terminal (id, title, comment)
-                VALUES (?, ?, ?);""",
-                           (id, title, comment))
-
+                insert into Terminal (title, comment)
+                VALUES (?, ?);""",
+                           (title, comment))
+            print('partner ok')
 
 
 if __name__ == '__main__':
-    pass
+    Fill_db()
