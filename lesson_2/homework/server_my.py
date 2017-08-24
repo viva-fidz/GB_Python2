@@ -1,7 +1,7 @@
 import socketserver
 import struct
 from collections import namedtuple
-from db import *
+from . import db
 
 
 class TCPHandler(socketserver.BaseRequestHandler):
@@ -67,16 +67,16 @@ class TCPHandler(socketserver.BaseRequestHandler):
 
         cmnt = 'cmnt'
 
-        Fill_db.terminal(terminal_id, tr_type, "'conf':'conf'")
-        Fill_db.payment(datetime, terminal_id, tr_transaction_id, partner_id, payment)
-        Fill_db.partner(partner_id, partner_name, cmnt)
+        f = db.Fill_db()
+        f.terminal(terminal_id, tr_type, "'conf':'conf'")
+        f.partner(partner_id, partner_name, cmnt)
+        f.payment(datetime, terminal_id, tr_transaction_id, partner_id, payment)
 
-        Fill_db.get_partners_total_sum(self)
-        Fill_db.get_terminal_total_sum(terminal_id)
-
-        Fill_db.delete_from_partner(partner_id)
-        Fill_db.delete_from_terminal(terminal_id)
-        Fill_db.delete_from_payment(tr_transaction_id)
+        f.get_partners_total_sum()
+        f.get_terminal_total_sum(terminal_id)
+        f.delete_from_partner(partner_id)
+        f.delete_from_terminal(terminal_id)
+        f.delete_from_payment(tr_transaction_id)
 
 
 HOST, PORT = 'localhost', 8888
