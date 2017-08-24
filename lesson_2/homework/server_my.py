@@ -72,15 +72,15 @@ class TCPHandler(socketserver.BaseRequestHandler):
         Fill_db.payment(datetime, terminal_id, tr_transaction_id, partner_id, payment)
         Fill_db.partner(partner_id, partner_name, cmnt)
 
-        Fill_db.get_partners_total_sum()
+        Fill_db.get_partners_total_sum(self)
         Fill_db.get_terminal_total_sum(terminal_id)
 
-        Fill_db.delete_from_partner(2548)
+        Fill_db.delete_from_partner(partner_id)
         Fill_db.delete_from_terminal(terminal_id)
         Fill_db.delete_from_payment(tr_transaction_id)
 
 
-HOST, PORT = 'localhost', 8080
+HOST, PORT = 'localhost', 8888
 server = socketserver.TCPServer((HOST, PORT), TCPHandler)
 print('Сервер запущен')
 

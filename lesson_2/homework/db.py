@@ -1,5 +1,7 @@
 import sqlite3
 
+
+
 with sqlite3.connect('company.db3') as conn:
     # Создаем курсор - это специальный объект который делает запросы и получает их результаты
     cursor = conn.cursor()
@@ -40,7 +42,7 @@ with sqlite3.connect('company.db3') as conn:
                      """)
 
 
-    class Fill_db:
+    class Fill_db():
         def terminal(terminal_id, title, configuration):
             with sqlite3.connect('company.db3') as conn:
                 cursor = conn.cursor()
@@ -75,7 +77,7 @@ with sqlite3.connect('company.db3') as conn:
                 cursor.execute("""
                          delete from Partner where id = ?;""",
                                (partner_id,))  # (key, value))
-                print('partner id={} delete ok'.format(partner_id))
+                print('partner id = {} delete ok'.format(partner_id))
 
 
         def delete_from_terminal(terminal_id):
@@ -85,19 +87,19 @@ with sqlite3.connect('company.db3') as conn:
                           delete from Terminal where id = ?;""",
                                (terminal_id,))
                 # print(terminal_id)
-                print('terminal id={} delete ok'.format(terminal_id))
+                print('terminal id = {} delete ok'.format(terminal_id))
 
 
         def delete_from_payment(transaction_id):
             with sqlite3.connect('company.db3') as conn:
                 cursor = conn.cursor()
                 cursor.execute("""
-                         delete from Payment where id = ?;""",
+                         delete from Payment where transaction_id = ?;""",
                                (transaction_id,))
-                print('payment delete ok')
+                print('payment transaction_id = {} delete ok'.format(transaction_id))
 
 
-        def get_partners_total_sum():
+        def get_partners_total_sum(self):
             '''формирует выборку с итоговой задолжностью
             перед каждым из партнёров
             '''
