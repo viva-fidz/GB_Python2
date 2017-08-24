@@ -25,7 +25,6 @@ class TCPHandler(socketserver.BaseRequestHandler):
 
         # время
         trtime = int(data.tr_time, 16)
-        print(trtime)
         tr_hour = (trtime & 0x1f000) >> 12
         tr_min = (trtime & 0xfc0) >> 6
         tr_sec = trtime & 0x3f
