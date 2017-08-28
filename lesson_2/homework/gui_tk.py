@@ -4,8 +4,6 @@ import sqlite3
 
 
 def sql_get_terminals():
-    """ SQL-заглушка
-    """
     with sqlite3.connect('c.db3') as conn:
         cursor = conn.cursor()
         cursor.execute("""
@@ -21,11 +19,6 @@ def sql_get_partners():
             select * from Partner"""),
         output = cursor.fetchall()
         return output
-
-
-def not_implemented(x='13'):
-    print("Не реализовано", x)
-
 
 class TableGrid(Frame):
     ''' Заготовка для создания табличного вида
