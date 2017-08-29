@@ -61,15 +61,16 @@ class TCPHandler(socketserver.BaseRequestHandler):
         partner_id = int(data.partner_id, 16)
         partner_name = "emobi"
         payment = int(data.payment, 16)
+        cmnt = 'cmnt'
+        
         msg = "Дата: {} {} терминал: {};\nтранзакция: id {}; тип: {}; данные: {}\n ".format(
              tr_decoded_date,  tr_decoded_time, terminal_id, tr_transaction_id, tr_type, tr_data)
         print("От клиента {} получено: \n{}".format(self.client_address[0], msg))
 
-        cmnt = 'cmnt'
-
         t = Terminal()
         prt = Partner()
         pay = Payment()
+        
         t.insert(terminal_id, tr_type, "'conf':'conf'")
         prt.insert(partner_id, partner_name, cmnt)
         pay.insert(datetime, terminal_id, tr_transaction_id, partner_id, payment)
