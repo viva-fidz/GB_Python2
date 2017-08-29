@@ -1,7 +1,6 @@
 import sqlite3
 
 
-
 with sqlite3.connect('company.db3') as conn:
     # Создаем курсор - это специальный объект который делает запросы и получает их результаты
     cursor = conn.cursor()
@@ -42,90 +41,112 @@ with sqlite3.connect('company.db3') as conn:
                      """)
 
 
-    class Fill_db():
-        def terminal(terminal_id, title, configuration):
-            with sqlite3.connect('company.db3') as conn:
-                cursor = conn.cursor()
-                cursor.execute("""
-                     insert into Terminal (id, title, configuration)
-                     VALUES (?, ?, ?);""",
-                               (terminal_id, title, configuration))
-                print('trans ok')
+class Terminal:
 
-        def payment(datetime, terminal_id, transaction_id, partner_id, summ):
-            with sqlite3.connect('company.db3') as conn:
-                cursor = conn.cursor()
-                cursor.execute("""
-                     insert into Payment (
-                     datetime, terminal_id, transaction_id, partner_id, summ)
-                     VALUES (?, ?, ?, ?, ?);""",
-                               (datetime, terminal_id, transaction_id, partner_id, summ))
-                print('payment ok')
+    def insert(self, terminal_id, title, configuration):
+        """ Добавляет данные в БД
+        """
 
-        def partner(partner_id, title, comment):
-            with sqlite3.connect('company.db3') as conn:
-                cursor = conn.cursor()
-                cursor.execute("""
-                 insert into Partner (id, title, comment)
+        with sqlite3.connect('company.db3') as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                 insert into Terminal (id, title, configuration)
                  VALUES (?, ?, ?);""",
-                               (partner_id, title, comment))
-                print('partner ok')
-
-        def delete_from_partner(partner_id):
-            with sqlite3.connect('company.db3') as conn:
-                cursor = conn.cursor()
-                cursor.execute("""
-                         delete from Partner where id = ?;""",
-                               (partner_id,))  # (key, value))
-                print('partner id = {} delete ok'.format(partner_id))
+                               (terminal_id, title, configuration))
 
 
-        def delete_from_terminal(terminal_id):
-            with sqlite3.connect('company.db3') as conn:
-                cursor = conn.cursor()
-                cursor.execute("""
-                          delete from Terminal where id = ?;""",
-                               (terminal_id,))
-                # print(terminal_id)
-                print('terminal id = {} delete ok'.format(terminal_id))
+    def delete(self, terminal_id):
+        """ Удаляет данные терминала из БД
+        """
+
+        with sqlite3.connect('company.db3') as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                delete from Terminal where id = ?;""",
+                           (terminal_id,))
 
 
-        def delete_from_payment(transaction_id):
-            with sqlite3.connect('company.db3') as conn:
-                cursor = conn.cursor()
-                cursor.execute("""
-                         delete from Payment where transaction_id = ?;""",
-                               (transaction_id,))
-                print('payment transaction_id = {} delete ok'.format(transaction_id))
+    def get_total_sum(self, terminal_id):
+        """ Считает суммму прошедших через указанный терминал средств
+        """
+
+        with sqlite3.connect('company.db3') as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                select sum(summ) from Payment where terminal_id = ?; """,
+                           (terminal_id,))
+        # print('terminal_id =', terminal_id, 'sum =', cursor.fetchone())
 
 
-        def get_partners_total_sum(self):
-            '''формирует выборку с итоговой задолжностью
-            перед каждым из партнёров
-            '''
+class Payment:
 
-            with sqlite3.connect('company.db3') as conn:
-                cursor = conn.cursor()
-                cursor.execute("""
-                            select title, sum(summ) from Payment
-                            inner join Partner on Payment.partner_id = Partner.id
-                            group by title"""),
+    def insert(self, datetime, terminal_id, transaction_id, partner_id, summ):
+        with sqlite3.connect('company.db3') as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                 insert into Payment (
+                 datetime, terminal_id, transaction_id, partner_id, summ)
+                 VALUES (?, ?, ?, ?, ?);""",
+                     (datetime, terminal_id, transaction_id, partner_id, summ))
+
+
+    def delete(self, transaction_id):
+        with sqlite3.connect('company.db3') as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                delete from Payment where transaction_id = ?;""",
+                    (transaction_id,))
+            # print('payment transaction_id = {} delete ok'.format(transaction_id))
+
+
+    def get_all_data(self):
+        """ Выводит все данные обо всех платежах
+        """
+
+        with sqlite3.connect('company.db3') as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                select * from Payment"""),
+            output = cursor.fetchone()
+
+            while output:
+                print(output)
                 output = cursor.fetchone()
 
-                while output:
-                    print(output)
-                    output = cursor.fetchone()
+
+class Partner:
+
+    def insert(self, partner_id, title, comment):
+        with sqlite3.connect('company.db3') as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                insert into Partner (id, title, comment)
+                VALUES (?, ?, ?);""",
+                    (partner_id, title, comment))
 
 
-        def get_terminal_total_sum(terminal_id):
-            """Общая суммма прошедших через указанный терминал средств
-            """
+    def delete(self, partner_id):
+        with sqlite3.connect('company.db3') as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                delete from Partner where id = ?;""",
+                    (partner_id,))
+            # print('partner id = {} delete ok'.format(partner_id))
 
-            with sqlite3.connect('company.db3') as conn:
-                cursor = conn.cursor()
-                cursor.execute("""
-                        select sum(summ) from Payment where terminal_id = ?; """,
-                               (terminal_id,))
 
-            print('terminal_id =', terminal_id, 'sum =', cursor.fetchone())
+    def get_partners_total_sum(self):
+        '''формирует выборку с итоговой задолжностью
+        перед каждым из партнёров
+        '''
 
+        with sqlite3.connect('company.db3') as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                        select title, sum(summ) from Payment
+                        inner join Partner on Payment.partner_id = Partner.id
+                        group by title"""),
+            output = cursor.fetchone()
+
+            while output:
+                print(output)
+                output = cursor.fetchone()
