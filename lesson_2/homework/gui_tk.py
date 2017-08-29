@@ -2,8 +2,6 @@ from tkinter import *
 # from db import Fill_db, Get_from_db
 import sqlite3
 
-
-def sql_get_terminals():
 def sql_get_payments():
     """ SQL-заглушка
     """
@@ -16,8 +14,6 @@ def sql_get_payments():
 
 
 def sql_get_terminals():
-    """ SQL-заглушка
-    """
     with sqlite3.connect('c.db3') as conn:
         cursor = conn.cursor()
         cursor.execute("""
