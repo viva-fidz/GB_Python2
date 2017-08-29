@@ -3,6 +3,7 @@ from tkinter import *
 import sqlite3
 
 
+def sql_get_terminals():
 def sql_get_payments():
     """ SQL-заглушка
     """
@@ -46,9 +47,6 @@ class TableGrid(Frame):
         for index, title in enumerate(titles):
             Label(self, text=title).grid(row=0, column=index)
 
-        # self.rebuild(0, 0)
-        # self.pack()
-
         self.rebuild(1, len(titles))
         self.grid(columnspan=len(titles))
 
@@ -67,12 +65,14 @@ class TableGrid(Frame):
                 self.vars[i - 1].append(var)
                 self.cells.append(cell)
 
+
     def get_terminals(self):
         sql_data = sql_get_terminals()
         self.rebuild(len(sql_data), len(sql_data[0]))
         for index, data in enumerate(sql_data):
             for i, d in enumerate(data):
                 self.vars[index][i].set(d)
+
 
     def get_partners(self):
         sql_data = sql_get_partners()
@@ -127,7 +127,7 @@ main_menu = Menu(main_window)
 file_menu = Menu(main_menu)
 file_menu.add_command(label='Terminals/Все терминалы', command=lambda g=grid_term: g.get_terminals())
 file_menu.add_command(label='Partners/Все партнеры', command=lambda g=grid_part: g.get_partners())
-file_menu.add_command(label='Partners/Все платежи', command=lambda g=grid_pay: g.get_payments())
+file_menu.add_command(label='Payments/Все платежи', command=lambda g=grid_pay: g.get_payments())
 main_menu.add_cascade(label='База данных', menu=file_menu)
 
 
