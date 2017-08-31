@@ -6,6 +6,7 @@ import datetime
 
 now = datetime.datetime.now()
 
+
 def id_gen(int_from=1111, int_to=9999):
     """Генерирует случайное число в заданом диапазоне 
        transaction_id
@@ -22,6 +23,7 @@ for id in id_gen():
     except StopIteration:
         print('StopIteration error in id_gen')
 
+
 # Данные транзакции
 tr_header = b'zz'
 tr_date = hex(((now.year - 2000 << 9) | (now.month << 5) | (now.day & 31)) & 0xFFFF).encode('utf-8')
@@ -29,7 +31,7 @@ tr_time = hex((now.hour << 12) | (now.minute << 6) | (now.second & 60)).encode('
 # id транзакции
 transaction_id = hex(transaction_id).encode('utf-8')
 
-partner_id = 30
+partner_id = 35
 partner_id= hex(partner_id).encode('utf-8')
 payment = 45
 payment = hex(payment).encode('utf-8')
@@ -40,11 +42,17 @@ transaction = struct.pack('!2s6s6s4s4s4s4s4s', b'zz', tr_date, tr_time, tr_type,
 print('transaction =', transaction)
 
 
-HOST, PORT = 'localhost', 8080
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.connect((HOST, PORT))
-sock.sendall(transaction)
-print('Данные отправлены')
+def client(ip, port, transaction):
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock.connect((ip, port))
+        sock.sendall(transaction)
+        print('Данные отправлены')
+        sock.close()
 
-sock.close()
+if __name__ == "__main__":
+
+    HOST, PORT = 'localhost', 9999
+    client(HOST, PORT, transaction)
+
+
 
