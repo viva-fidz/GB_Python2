@@ -116,14 +116,14 @@ main_window.geometry('{}x{}+{}+{}'.format(w, h, x, y))
 main_window.title('БД - админ')
 grid_term = TableGrid(main_window, ('id', 'title', 'config', 'cmnt'), 4)
 grid_part = TableGrid(main_window, ('partner_id', 'partner_name', 'cmnt'), 3)
-grid_pay = TableGrid(main_window, ('№', 'дата', 'terminal_id', 'transaction_id', 'partner_id', 'сумма'), 6)
+grid_pay = TableGrid(main_window, ('id', 'дата', 'terminal_id', 'transaction_id', 'partner_id', 'сумма'), 6)
 
 # Для создания меню сначала создаётся корневой элемент:
 main_menu = Menu(main_window)
 file_menu = Menu(main_menu)
-file_menu.add_command(label='Terminals/Все терминалы', command=lambda g=grid_term: g.get_terminals())
-file_menu.add_command(label='Partners/Все партнеры', command=lambda g=grid_part: g.get_partners())
-file_menu.add_command(label='Payments/Все платежи', command=lambda g=grid_pay: g.get_payments())
+file_menu.add_command(label='Показать терминалы', command=lambda g=grid_term: g.get_terminals())
+file_menu.add_command(label='Показать партнеров', command=lambda g=grid_part: g.get_partners())
+file_menu.add_command(label='Показать платежи', command=lambda g=grid_pay: g.get_payments())
 main_menu.add_cascade(label='База данных', menu=file_menu)
 
 
