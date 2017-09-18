@@ -1,5 +1,4 @@
 from tkinter import *
-# from db import Fill_db, Get_from_db
 import sqlite3
 
 
@@ -36,10 +35,10 @@ class TableGrid(Frame):
     """ Заготовка для создания табличного вида
     """
 
-    def __init__(self, parent=None, titles=None, rows=0, *args, **kwargs):
+    def __init__(self, parent=None, titles=None, rows=0, *args, **kwargs ):
         w = kwargs.get('w', 800)
         h = kwargs.get('h', 150)
-        super().__init__(parent, relief=GROOVE, width=w, height=h, bd=1)
+        super().__init__(parent, relief=GROOVE, width=w, height=h, bd=1, bg='green')
         self.w = w
         self.h = h
 
@@ -113,26 +112,12 @@ class TableGrid(Frame):
                 # Все ячейки тоже "запомним" внутри нашего виджета (чтобы можно было их удалять)
                 self.cells.append(cell)
 
-    def get_terminals(self):
-        sql_data = sql_get_terminals()
+    def get_data(self, sql_data):
         self.rebuild(len(sql_data), len(sql_data[0]))
         for index, data in enumerate(sql_data):
             for i, d in enumerate(data):
                 self.vars[index][i].set(d)
 
-    def get_partners(self):
-        sql_data = sql_get_partners()
-        self.rebuild(len(sql_data), len(sql_data[0]))
-        for index, data in enumerate(sql_data):
-            for i, d in enumerate(data):
-                self.vars[index][i].set(d)
-
-    def get_payments(self):
-        sql_data = sql_get_payments()
-        self.rebuild(len(sql_data), len(sql_data[0]))
-        for index, data in enumerate(sql_data):
-            for i, d in enumerate(data):
-                self.vars[index][i].set(d)
 
     def update_data(self, data_func):
         """ Заполнение таблицы данными.
@@ -156,13 +141,14 @@ grid_pay = TableGrid(main_window, ('id', 'дата', 'terminal_id', 'transaction
 # Для создания меню сначала создаётся корневой элемент:
 main_menu = Menu(main_window)
 file_menu = Menu(main_menu)
-file_menu.add_command(label='Показать терминалы', command=lambda g=grid_term: g.get_terminals())
-file_menu.add_command(label='Показать партнеров', command=lambda g=grid_part: g.get_partners())
-file_menu.add_command(label='Показать платежи', command=lambda g=grid_pay: g.get_payments())
+file_menu.add_command(label='Показать терминалы', command=lambda g=grid_term: g.get_data(sql_get_terminals()))
+file_menu.add_command(label='Показать партнеров', command=lambda g=grid_part: g.get_data(sql_get_partners()))
+file_menu.add_command(label='Показать платежи', command=lambda g=grid_pay: g.get_data(sql_get_payments()))
 main_menu.add_cascade(label='База данных', menu=file_menu)
 
 # Добавление меню главному окну:
 main_window.config(menu=main_menu)
+
 
 # Запуск основного цикла программы:
 mainloop()
